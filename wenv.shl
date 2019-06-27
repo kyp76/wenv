@@ -1,0 +1,168 @@
+#!/bin/sh  
+
+WENV_DIR="${WENV_DIR:-$HOME/etc/env}"
+WENV_SEP="${WENV_SEP:-|}"
+
+WENV_VAR="COMPOSE_ENVIRONENT"
+
+WENV_LIST_FORMAT="%25s $WENV_SEP %6s $WENV_SEP %50s $WENV_SEP %3s\n"  
+
+
+### help 
+
+
+
+
+_wenv_environment()
+{
+    [ -z "$1" ] && return 1
+    [ -d "$WENV_DIR/$1" ] || return 1 
+    [ -r "$WENV_DIR/$1/env*.sh" ] || return 1
+}
+
+
+
+_wenv_help()
+{
+cat <<EOF
+Usage: 
+    wenv [action] [...]
+
+with action in: 
+    h | help            : display help 
+    l | list            : list available env variable
+    s | set | load      : load env 
+    u | unset | unlaod  : unload env
+    a | add             : add env
+    d | delete          : delete env
+EOF
+
+}
+
+
+_wenv_info()
+{
+    for _wenv_info__v in $WENV_VAR; do
+        eval _wenv_info__c=\"\$$_wenv_info__v\"
+        if [ -n "$_wucp_info__c" ]; then
+            echo "export $_wenv_info__v=$_wucp_info__c"
+        fi
+    done
+}
+
+_wenv_load()
+{
+    for f in "$1" "$1.sh" "env_$1.sh"; do
+        [ -r "$WENV_DIR/$f" ] &&
+            . "$WENV_DIR/$f" &&
+            WENV_CURRENT="$f" && return 0
+    done
+    return 1
+}
+
+_wenv_list()
+{
+    echo $2
+    if [[ -n "$2" ]]; then
+        _wenv_view $2
+    else
+        current_dir=$(pwd)
+        cd "$WENV_DIR" || return 0
+        _wenv_print_env_line name valid account_id cur
+        _wenv_print_env_line ------------------- \
+                            ------ \
+                            -------------------------------------------------- \
+                            ---
+        for f in *; do
+            _wenv_print_env "$f"
+        done
+        cd "$current_dir"
+    fi
+}
+
+_wenv_print_env_line()
+{
+    printf "$WENV_LIST_FORMAT" "$@"
+}
+
+_wenv_print_env()
+{
+    [ -f "$1" ] || return 1 # KEZAOKO
+    name="${1#env_}"
+    name="${name%.sh}"
+    cur=
+    if [ "$1" == "$WENV_CURRENT" ]; then
+        cur="*"
+    fi
+#    _wenv_print_env_%.sh_name="${1%/}"
+#    _wenv_print_env__name="${_wenv_print_env__name##*/}"
+#    _wenv_print_env__valid=NO
+#    _wenv_print_env__account_id=
+#    _wenv_print_env__current=
+#
+  # if _wenv_is_bundle "$1"; then
+    _wenv_print_env_line "$name" "" "" "$cur"
+}
+
+_wenv_view()
+{
+    for f in "$1" "$1.sh" "env_$1.sh"; do
+        [ -r "$WENV_DIR/$f" ] &&
+            cat "$WENV_DIR/$f" && return 0
+    done
+    return 1
+}
+
+### main
+
+_wenv()
+{
+    case "$1" in
+        h|help)
+            _wenv_help
+            ;;
+        l|list)
+            _wenv_list "$@"
+            ;;
+        s|"set"|load)
+            shift
+            _wenv_load "$@"
+            ;;
+        u|"unset"|unload)
+            shift
+            _wenv_unload "$@"
+            ;;
+        a|add)
+            shift
+            _wenv_add "$@"
+            ;;
+        d|delete)
+            shift
+            _wenv_delete "$@"
+            ;;
+        ""|i|info)
+            _wenv_info
+            ;;
+        *)
+            _wenv_load "$@"
+            ;;
+    esac
+}
+
+wenv()
+{
+    _wenv "$@"
+    wenv="$?"
+    [ -n "$_wenv" ] && printf "%s\n" "$_wenv"
+    return $wenv
+}
+
+
+if [ "${0##*/}" = "wenv.shl" ]; then
+    echo 'tata'
+    cat >&2 <<EOF
+# not supposed to be used this way
+# first do :
+. $0
+EOF
+fi
