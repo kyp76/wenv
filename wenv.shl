@@ -1,6 +1,6 @@
 #!/bin/sh
 
-WENV_DIR="${WENV_DIR:-$HOME/etc/env}"
+WENV_DIR="$HOME/etc/env"
 WENV_SEP="${WENV_SEP:-|}"
 
 WENV_VAR="COMPOSE_ENVIRONENT"
