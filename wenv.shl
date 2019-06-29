@@ -1,14 +1,14 @@
-#!/bin/sh  
+#!/bin/sh
 
 WENV_DIR="${WENV_DIR:-$HOME/etc/env}"
 WENV_SEP="${WENV_SEP:-|}"
 
 WENV_VAR="COMPOSE_ENVIRONENT"
 
-WENV_LIST_FORMAT="%25s $WENV_SEP %6s $WENV_SEP %50s $WENV_SEP %3s\n"  
+WENV_LIST_FORMAT="%25s $WENV_SEP %6s $WENV_SEP %50s $WENV_SEP %3s\n"
 
 
-### help 
+### help
 
 
 
@@ -16,7 +16,7 @@ WENV_LIST_FORMAT="%25s $WENV_SEP %6s $WENV_SEP %50s $WENV_SEP %3s\n"
 _wenv_environment()
 {
     [ -z "$1" ] && return 1
-    [ -d "$WENV_DIR/$1" ] || return 1 
+    [ -d "$WENV_DIR/$1" ] || return 1
     [ -r "$WENV_DIR/$1/env*.sh" ] || return 1
 }
 
@@ -25,13 +25,13 @@ _wenv_environment()
 _wenv_help()
 {
 cat <<EOF
-Usage: 
+Usage:
     wenv [action] [...]
 
-with action in: 
-    h | help            : display help 
+with action in:
+    h | help            : display help
     l | list            : list available env variable
-    s | set | load      : load env 
+    s | set | load      : load env
     u | unset | unlaod  : unload env
     a | add             : add env
     d | delete          : delete env
@@ -62,7 +62,10 @@ _wenv_load()
 
 _wenv_list()
 {
-    echo $2
+    if [[ -d "$WENV_DIR" ]];then
+        mkdir "$WENV_DIR"
+    fi
+
     if [[ -n "$2" ]]; then
         _wenv_view $2
     else
