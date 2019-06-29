@@ -62,6 +62,7 @@ _wenv_load()
 
 _wenv_list()
 {
+    echo "$WENV_DIR"
     if [[ -d "$WENV_DIR" ]];then
         echo "Directory $WENV_DIR exits"
     else
