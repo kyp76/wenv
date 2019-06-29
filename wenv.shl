@@ -62,9 +62,7 @@ _wenv_load()
 
 _wenv_list()
 {
-    echo "$WENV_DIR"
     if [[ -d "$WENV_DIR" ]];then
-        echo "Directory $WENV_DIR exits"
     else
         mkdir -p  "$WENV_DIR"
     fi
@@ -165,7 +163,6 @@ wenv()
 
 
 if [ "${0##*/}" = "wenv.shl" ]; then
-    echo 'tata'
     cat >&2 <<EOF
 # not supposed to be used this way
 # first do :
