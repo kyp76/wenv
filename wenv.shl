@@ -63,6 +63,7 @@ _wenv_load()
 _wenv_list()
 {
     if [[ -d "$WENV_DIR" ]];then
+        echo ""
     else
         mkdir -p  "$WENV_DIR"
     fi
