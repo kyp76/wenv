@@ -109,6 +109,24 @@ _wenv_print_env()
     _wenv_print_env_line "$name" "" "" "$cur"
 }
 
+
+_wenv_add()
+{
+    [ $# -ne 2 ] && return 1
+    [ -z "$1" ] && return 1
+    path_file="$WENV_DIR/env_$2.sh"
+    echo "create file: $path_file"
+    cat  << EOF > $path_file
+#!/bin/sh
+
+export CLIENT_ID=
+export CLIENT_SECRET=
+export ACCOUNT_ID=
+EOF
+    vim $path_file
+}
+
+
 _wenv_view()
 {
     for f in "$1" "$1.sh" "env_$1.sh"; do
@@ -117,7 +135,6 @@ _wenv_view()
     done
     return 1
 }
-
 ### main
 
 _wenv()
@@ -161,7 +178,6 @@ wenv()
     [ -n "$_wenv" ] && printf "%s\n" "$_wenv"
     return $wenv
 }
-
 
 if [ "${0##*/}" = "wenv.shl" ]; then
     cat >&2 <<EOF
