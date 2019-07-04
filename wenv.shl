@@ -5,13 +5,10 @@ WENV_SEP="${WENV_SEP:-|}"
 
 WENV_VAR="COMPOSE_ENVIRONENT"
 
-WENV_LIST_FORMAT="%25s $WENV_SEP %6s $WENV_SEP %50s $WENV_SEP %3s\n"
+WENV_LIST_FORMAT="%25s $WENV_SEP %3s $WENV_SEP %50s $WENV_SEP %3s\n"
 
 
 ### help
-
-
-
 
 _wenv_environment()
 {
@@ -63,7 +60,7 @@ _wenv_load()
 _wenv_list()
 {
     if [[ -d "$WENV_DIR" ]];then
-        echo ""
+        :
     else
         mkdir -p  "$WENV_DIR"
     fi
@@ -73,11 +70,11 @@ _wenv_list()
     else
         current_dir=$(pwd)
         cd "$WENV_DIR" || return 0
-        _wenv_print_env_line name valid account_id cur
+        _wenv_print_env_line name cur account_id valid
         _wenv_print_env_line ------------------- \
-                            ------ \
+                            --- \
                             -------------------------------------------------- \
-                            ---
+                            ------
         for f in *; do
             _wenv_print_env "$f"
         done
@@ -99,22 +96,15 @@ _wenv_print_env()
     if [ "$1" == "$WENV_CURRENT" ]; then
         cur="*"
     fi
-#    _wenv_print_env_%.sh_name="${1%/}"
-#    _wenv_print_env__name="${_wenv_print_env__name##*/}"
-#    _wenv_print_env__valid=NO
-#    _wenv_print_env__account_id=
-#    _wenv_print_env__current=
-#
-  # if _wenv_is_bundle "$1"; then
-    _wenv_print_env_line "$name" "" "" "$cur"
+    _wenv_print_env_line "$name" "$cur" "" ""
 }
 
 
 _wenv_add()
 {
-    [ $# -ne 2 ] && return 1
+    [ $# -ne 1 ] && return 1
     [ -z "$1" ] && return 1
-    path_file="$WENV_DIR/env_$2.sh"
+    path_file="$WENV_DIR/env_$1.sh"
     echo "create file: $path_file"
     cat  << EOF > $path_file
 #!/bin/sh
@@ -179,10 +169,11 @@ wenv()
     return $wenv
 }
 
-if [ "${0##*/}" = "wenv.shl" ]; then
-    cat >&2 <<EOF
-# not supposed to be used this way
-# first do :
-. $0
-EOF
-fi
+
+#if [ "${0##*/}" = "wenv.shl" ]; then
+#    cat >&2 <<EOF
+## not supposed to be used this way
+## first do :
+#. $0
+#EOF
+#fi
