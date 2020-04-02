@@ -86,16 +86,21 @@ _wenv_print_env_line()
     printf "$WENV_LIST_FORMAT" "$@"
 }
 
+_wenv_extract_account_id() {
+   account_id=`cat $WENV_DIR/$1 | grep 'export ACCOUNT_ID=' | cut -d "=" -f 2`
+}
+
 _wenv_print_env()
 {
     [ -f "$1" ] || return 1 # KEZAOKO
+    _wenv_extract_account_id $1
     name="${1#env_}"
     name="${name%.sh}"
     cur=
     if [ "$1" == "$WENV_CURRENT" ]; then
         cur="*"
     fi
-    _wenv_print_env_line "$name" "$cur" ""
+    _wenv_print_env_line "$name" "$cur" "$account_id"
 }
 
 
