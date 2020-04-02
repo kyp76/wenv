@@ -5,7 +5,7 @@ WENV_SEP="${WENV_SEP:-|}"
 
 WENV_VAR="COMPOSE_ENVIRONENT"
 
-WENV_LIST_FORMAT="%25s $WENV_SEP %3s $WENV_SEP %50s $WENV_SEP %3s\n"
+WENV_LIST_FORMAT="%30s $WENV_SEP %3s $WENV_SEP %38s\n"
 
 
 ### help
@@ -70,11 +70,10 @@ _wenv_list()
     else
         current_dir=$(pwd)
         cd "$WENV_DIR" || return 0
-        _wenv_print_env_line name cur account_id valid
-        _wenv_print_env_line ------------------- \
+        _wenv_print_env_line name cur account_id
+        _wenv_print_env_line ------------------------------ \
                             --- \
-                            -------------------------------------------------- \
-                            ------
+                            -------------------------------------  
         for f in *; do
             _wenv_print_env "$f"
         done
@@ -96,7 +95,7 @@ _wenv_print_env()
     if [ "$1" == "$WENV_CURRENT" ]; then
         cur="*"
     fi
-    _wenv_print_env_line "$name" "$cur" "" ""
+    _wenv_print_env_line "$name" "$cur" ""
 }
 
 
