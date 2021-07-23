@@ -116,6 +116,8 @@ _wenv_add()
 export CLIENT_ID=
 export CLIENT_SECRET=
 export ACCOUNT_ID=
+
+sh $HOME/dotfiles/scripts/commun/export_PG_cred.sh
 EOF
     vim $path_file
 }
